@@ -8,15 +8,15 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
-}
+} */
 
-body {
+/* body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -24,6 +24,19 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+} */
+
+/* :root {
+  --foreground-rgb: 250, 250, 250;
+  --background-start-rgb: 31 31, 31;
+  --background-end-rgb: 31, 31, 31;
+  color-scheme: dark;
+} */
+
+@layer base {
+  body {
+    @apply bg-neutral-100 font-sans text-base text-neutral-900 dark:bg-neutral-800 dark:text-neutral-50;
+  }
 }
 
 @layer utilities {

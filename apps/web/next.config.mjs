@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  poweredByHeader: false,
+  trailingSlash: true, // /about/ -> /about
+};
 
 export default nextConfig;
