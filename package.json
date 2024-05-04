@@ -1,0 +1,38 @@
+{
+  "name": "fido-app",
+  "version": "1.0.0",
+  "description": "A monorepo setup with yarn workspaces, typescript, eslint, and prettier, with ability to use top-level await and directory imports",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "pkg-repo": "yarn workspace @fido/pkg-repo",
+    "app-repo": "yarn workspace @fido/app-repo",
+    "mongoose": "yarn workspace @fido/mongoose",
+    "web": "yarn workspace @fido/web",
+    "lint": "eslint ./apps/* ./packages/*",
+    "format": "prettier --write ./apps/*/src ./packages/*/src",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@types/node": "^20.12.8",
+    "@typescript-eslint/eslint-plugin": "^7.8.0",
+    "@typescript-eslint/parser": "^7.8.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.14",
+    "tsx": "^4.8.2",
+    "typescript": "^5.4.5"
+  },
+  "type": "module",
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": ">=20.12.2",
+    "yarn": ">=1.22.22"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "@fido/app-repo",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc --build",
+    "start": "node --import ../../loader.js dist/index.js"
+  },
+  "type": "module",
+  "devDependencies": {}
+}
