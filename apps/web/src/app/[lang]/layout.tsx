@@ -31,34 +31,14 @@ export default function RootLayout({
       className=""
       suppressHydrationWarning
     >
-      <ThemeProvider>
-        <body
-          className={`${inter.className} flex min-h-dvh flex-col antialiased`}
-        >
-          <script
-            id="load-theme"
-            dangerouslySetInnerHTML={{
-              __html: themeLoader,
-            }}
-          />
+      <body
+        className={`${inter.className} flex min-h-dvh flex-col antialiased`}
+      >
+        <ThemeProvider>
           <Header />
           {children}
-        </body>
-      </ThemeProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
-
-const themeLoader = `(function () {
-  if (localStorage.theme === "dark") {
-    document.documentElement.classList.add("dark");
-  } else if (localStorage.theme === "light") {
-    document.documentElement.classList.remove("dark");
-  } else {
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }
-}) ()`;
