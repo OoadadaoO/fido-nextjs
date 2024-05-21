@@ -51,7 +51,7 @@ export function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="bg-background sticky top-0 flex h-16 items-center gap-4 border-b px-4 lg:px-6">
+    <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background/75 px-4 backdrop-blur-sm lg:px-6">
       <Sheet>
         <SheetTrigger asChild>
           <div className="flex-1 shrink-0 lg:hidden">
@@ -63,7 +63,7 @@ export function Header() {
         </SheetTrigger>
         <SheetContent side="left">
           <h1 className="text-2xl font-semibold">Fido App</h1>
-          <div className="border-border my-4 h-[1px] w-full border-b" />
+          <div className="my-4 h-[1px] w-full border-b border-border" />
           <nav className="grid gap-6 text-lg font-medium">
             {navigations.map((nav) => (
               <a
@@ -73,7 +73,7 @@ export function Header() {
                   pathname.replace(/\/[^/]+/, "") === nav.url
                     ? "text-foreground"
                     : "text-muted-foreground"
-                } hover:text-foreground capitalize transition-colors`}
+                } capitalize transition-colors hover:text-foreground`}
               >
                 {nav.id}
               </a>
@@ -107,7 +107,7 @@ export function Header() {
                   pathname.replace(/\/[^/]+/, "") === nav.url
                     ? "text-foreground"
                     : "text-muted-foreground"
-                } hover:text-foreground capitalize transition-colors`}
+                } capitalize transition-colors hover:text-foreground`}
               >
                 {nav.id}
               </a>

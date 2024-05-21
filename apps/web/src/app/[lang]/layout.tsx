@@ -4,8 +4,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/hook/ThemeProvider";
 import { locale } from "@/lib/locale/config";
 
-import { Header } from "./_components-layout/Header";
-import "./globals.css";
+import "../globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,13 +30,8 @@ export default function RootLayout({
       className=""
       suppressHydrationWarning
     >
-      <body
-        className={`${inter.className} flex min-h-dvh flex-col antialiased`}
-      >
-        <ThemeProvider>
-          <Header />
-          {children}
-        </ThemeProvider>
+      <body className={`${inter.className}`}>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
