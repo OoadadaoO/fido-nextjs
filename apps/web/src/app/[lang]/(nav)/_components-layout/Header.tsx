@@ -19,6 +19,8 @@ import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { useTheme } from "@/hook/ThemeProvider";
 import { cn } from "@/lib/utils";
 
+import { LoginItem } from "./LoginItem";
+
 const navigations = [
   {
     id: "home",
@@ -129,6 +131,7 @@ export function Header() {
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem>Support</DropdownMenuItem>
             <DropdownMenuSeparator />
+            <LoginItem />
             <DropdownMenuItem>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
