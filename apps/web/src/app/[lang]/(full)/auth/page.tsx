@@ -1,12 +1,18 @@
+import { cookies } from "next/headers";
 import Image from "next/image";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { auth } from "@/lib/auth/config";
 
 import { Back } from "./_components/Back";
 import { Login } from "./_components/Login";
 import { SignUp } from "./_components/SignUp";
 
 export default function Page() {
+  const [id, challenge] = cookies().get(auth.cookieName)?.value.split(".") || [
+    "",
+    "",
+  ];
   return (
     <div className="grid h-dvh grid-cols-1 p-3 lg:grid-cols-2">
       <div className="hidden overflow-hidden rounded-2xl lg:block">
@@ -33,7 +39,7 @@ export default function Page() {
         </div>
         <div>
           <TabsContent value="signup">
-            <SignUp />
+            <SignUp id={id} challenge={challenge} />
           </TabsContent>
           <TabsContent value="login">
             <Login />
