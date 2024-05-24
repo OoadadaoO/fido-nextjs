@@ -2,13 +2,14 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import mongoose from "mongoose";
 
-import { auth, session } from "@/lib/auth/config";
+import { login } from "@/lib/auth";
+import { serverAuth } from "@/lib/auth/config";
 import {
   Attestation,
   type AttestationValidationData,
 } from "@/lib/auth/credentials";
 import { attestationJSONSchema } from "@/lib/auth/credentials";
-import { Credential, db, Session, User } from "@/lib/db";
+import { Credential, db, User } from "@/lib/db";
 import { publicEnv } from "@/lib/env/public";
 
 export async function POST(req: NextRequest) {
@@ -24,7 +25,7 @@ export async function POST(req: NextRequest) {
   }
 
   const [id, challenge] = req.cookies
-    .get(auth.cookieName)
+    .get(serverAuth.cookieName)
     ?.value.split(".") || ["", ""];
   if (!id || !challenge) {
     return NextResponse.json({ error: "Invalid cookie" }, { status: 400 });
@@ -73,7 +74,7 @@ async function registerUserAtom(
         publicEnv.NEXT_PUBLIC_RP_ID,
       );
     } catch (error: any) {
-      throw new Error(`*401Invalid attestation: ${error.message}`);
+      throw new Error(`*401Invalid attestation`);
     }
 
     const newUser = await User.create({
@@ -87,15 +88,15 @@ async function registerUserAtom(
       publicKey: data.publicKey,
       ownerId: newUser._id,
     });
-    const newSession = await Session.create({
-      userId: newUser._id,
-      credentialId: newCredential._id,
-      identifier: { ...identifier, activeAt: new Date() },
-      expireAt: new Date(Date.now() + session.expDiff),
+
+    await login({
+      userId: newUser.id,
+      credentialId: newCredential.id,
+      identifier,
     });
     await dbSession.commitTransaction();
 
-    return { user: newUser, credential: newCredential, session: newSession };
+    return {};
   } catch (error: any) {
     console.error(error);
     await dbSession.abortTransaction();

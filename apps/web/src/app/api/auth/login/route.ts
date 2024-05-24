@@ -1,12 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import { auth, session } from "@/lib/auth/config";
+import { login } from "@/lib/auth";
+import { serverAuth } from "@/lib/auth/config";
 import {
   Assertion,
   type AssertionValidationData,
 } from "@/lib/auth/credentials";
 import { assertionJSONSchema } from "@/lib/auth/credentials";
-import { Credential, db, Session, User } from "@/lib/db";
+import { Credential, db, User } from "@/lib/db";
 import { publicEnv } from "@/lib/env/public";
 
 export async function POST(req: NextRequest) {
@@ -16,10 +17,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid header" }, { status: 400 });
   }
 
-  const [, challenge] = req.cookies.get(auth.cookieName)?.value.split(".") || [
-    "",
-    "",
-  ];
+  const [, challenge] = req.cookies
+    .get(serverAuth.cookieName)
+    ?.value.split(".") || ["", ""];
   if (!challenge) {
     return NextResponse.json({ error: "Invalid cookie" }, { status: 400 });
   }
@@ -77,22 +77,26 @@ async function authUserAtom(
         credential.counter,
       );
     } catch (error: any) {
-      throw new Error(`*401Invalid assertion: ${error.message}`);
+      throw new Error(`*401Invalid assertion`);
     }
 
-    const [newCredential, newSession] = await Promise.all([
-      Credential.findByIdAndUpdate(credential._id, {
+    const updatedCredential = await Credential.findByIdAndUpdate(
+      credential._id,
+      {
         counter: data.counter,
-      }).exec(),
-      Session.create({
-        userId: user._id,
-        credentialId: credential._id,
-        identifier: { ...identifier, activeAt: new Date() },
-        expireAt: new Date(Date.now() + session.expDiff),
-      }),
-    ]);
+      },
+      { new: true },
+    ).exec();
+    if (!updatedCredential) {
+      throw new Error("*500Credential update failed");
+    }
+    await login({
+      userId: user.id,
+      credentialId: updatedCredential.id,
+      identifier,
+    });
     await dbSession.commitTransaction();
-    return { credential: newCredential, session: newSession };
+    return {};
   } catch (error: any) {
     await dbSession.abortTransaction();
     console.error(error);

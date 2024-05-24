@@ -17,9 +17,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { useTheme } from "@/hook/ThemeProvider";
+import type { Session } from "@/lib/auth/types";
 import { cn } from "@/lib/utils";
 
 import { LoginItem } from "./LoginItem";
+import { LogoutItem } from "./LogoutItem";
 
 const navigations = [
   {
@@ -49,7 +51,8 @@ const navigations = [
   },
 ];
 
-export function Header() {
+export function Header({ session }: { session: Session }) {
+  const isLogin = !!session?.user;
   const pathname = usePathname();
 
   return (
@@ -131,8 +134,7 @@ export function Header() {
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem>Support</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <LoginItem />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            {isLogin ? <LogoutItem /> : <LoginItem />}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

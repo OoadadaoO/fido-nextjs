@@ -4,7 +4,7 @@ import { base64url } from "jose";
 
 import { privateEnv } from "../env/private";
 
-export const auth: {
+export const serverAuth: {
   cookieName: string;
   cookieOptions: Partial<ResponseCookie>;
 } = {
@@ -13,19 +13,21 @@ export const auth: {
   cookieOptions: {},
 };
 
-export const session: {
+export const sessionToken: {
   secret: Uint8Array;
   protectedHeader: { alg: string; enc: string };
   expDiff: number;
-  jwtCookieName: string;
-  jwtCookieOptions: Partial<ResponseCookie>;
+  extDiff: number;
+  cookieName: string;
+  cookieOptions: Partial<ResponseCookie>;
 } = {
   secret: base64url.decode(privateEnv.AUTH_SECRET),
   protectedHeader: { alg: "dir", enc: "A128CBC-HS256" },
   expDiff: parseTimeToMilliSeconds(privateEnv.AUTH_EXPIRES),
-  jwtCookieName:
-    privateEnv.NODE_ENV === "production" ? "____Secure.jwt" : "__Dev.jwt",
-  jwtCookieOptions: {
+  extDiff: parseTimeToMilliSeconds(privateEnv.AUTH_ACTIVE_EXTEND),
+  cookieName:
+    privateEnv.NODE_ENV === "production" ? "____Secure.sst" : "__Dev.sst",
+  cookieOptions: {
     httpOnly: true,
     secure: privateEnv.NODE_ENV === "production",
     sameSite: "lax",

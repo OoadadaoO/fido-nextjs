@@ -74,7 +74,7 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  @apply bg-foreground/30 rounded-full;
+  @apply rounded-full bg-foreground/30;
 }
 
 /* Handle on hover */

@@ -5,6 +5,7 @@ const privateEnvSchema = z.object({
   MONGO_URL: z.string(),
   AUTH_SECRET: z.string(),
   AUTH_EXPIRES: z.string(),
+  AUTH_ACTIVE_EXTEND: z.string(),
 });
 
 type PrivateEnv = z.infer<typeof privateEnvSchema>;
@@ -14,6 +15,7 @@ export const privateEnv: PrivateEnv = {
   MONGO_URL: process.env.MONGO_URL!,
   AUTH_SECRET: process.env.AUTH_SECRET!,
   AUTH_EXPIRES: process.env.AUTH_EXPIRES!,
+  AUTH_ACTIVE_EXTEND: process.env.AUTH_EXPIRES!,
 };
 
 privateEnvSchema.parse(privateEnv);

@@ -1,13 +1,33 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { generateAuth } from "./lib/auth";
-import { auth } from "./lib/auth/config";
+import { Types } from "mongoose";
+
+import { serverAuth, sessionToken } from "./lib/auth/config";
+import { decrypt, encrypt } from "./lib/auth/jwt";
 import { getPathnameLocale, getPreferLocale } from "./lib/locale";
 import { locale } from "./lib/locale/config";
+import { base64Url } from "./lib/utils/base64Url";
 import { applySetCookie } from "./lib/utils/middleware";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const res = NextResponse.next();
+
+  // refresh session
+  const oldJwt = request.cookies.get(sessionToken.cookieName)?.value;
+  if (oldJwt) {
+    const expires = new Date(Date.now() + sessionToken.expDiff);
+    const token = await decrypt(oldJwt);
+    if (!token) return Response.redirect(new URL("/", request.url));
+    const newJwt = await encrypt(token, expires);
+    const res = NextResponse.next();
+    res.cookies.set({
+      name: sessionToken.cookieName,
+      value: newJwt,
+      expires,
+      ...sessionToken.cookieOptions,
+    });
+  }
 
   // Locale
   const pathnameLocale = getPathnameLocale(pathname);
@@ -16,17 +36,16 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname = `/${locale}${pathname}`;
     return NextResponse.redirect(request.nextUrl);
   }
-
-  const res = NextResponse.next();
   res.cookies.set({
     name: locale.cookieName,
     value: pathnameLocale,
     ...locale.cookieOptions,
   });
 
+  // Authentication
   if (pathname.match(/\/auth\//)) {
     res.cookies.set({
-      name: auth.cookieName,
+      name: serverAuth.cookieName,
       value: generateAuth(),
     });
   }
@@ -43,3 +62,10 @@ export const config = {
     { type: "header", key: "purpose", value: "prefetch" },
   ],
 };
+
+function generateAuth() {
+  const id = new Types.ObjectId().toHexString();
+  const randomBytes = crypto.getRandomValues(new Uint8Array(32));
+  const challenge = base64Url.encode(randomBytes);
+  return `${id}.${challenge}`;
+}

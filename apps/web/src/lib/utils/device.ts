@@ -1,6 +1,12 @@
 "use client";
 
-export async function getIdentifier() {
+export type Identifier = {
+  ip: string;
+  os: string;
+  browser: string;
+};
+
+export async function getIdentifier(): Promise<Identifier> {
   const ip = await getIP();
   const { os, browser } = getDevice();
   return { ip, os, browser };

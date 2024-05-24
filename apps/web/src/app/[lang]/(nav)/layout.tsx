@@ -1,6 +1,8 @@
+import { auth } from "@/lib/auth";
+
 import { Header } from "./_components-layout/Header";
 
-export default function NavLayout({
+export default async function NavLayout({
   children,
   params,
 }: Readonly<{
@@ -8,9 +10,10 @@ export default function NavLayout({
   params: { lang: string };
 }>) {
   params;
+  const session = await auth();
   return (
     <div className={`flex min-h-dvh flex-col antialiased`}>
-      <Header />
+      <Header session={session} />
       {children}
     </div>
   );
