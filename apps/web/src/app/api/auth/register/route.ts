@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import mongoose from "mongoose";
 
 import { login } from "@/lib/auth";
-import { serverAuth } from "@/lib/auth/config";
+import { serverCred } from "@/lib/auth/config";
 import {
   Attestation,
   type AttestationValidationData,
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   }
 
   const [id, challenge] = req.cookies
-    .get(serverAuth.cookieName)
+    .get(serverCred.cookieName)
     ?.value.split(".") || ["", ""];
   if (!id || !challenge) {
     return NextResponse.json({ error: "Invalid cookie" }, { status: 400 });

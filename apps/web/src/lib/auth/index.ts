@@ -9,7 +9,7 @@ import type {
 import type { Identifier } from "../utils/device";
 
 import { sessionToken } from "./config";
-import { decrypt, encrypt } from "./jwt";
+import { decrypt, encrypt } from "./jwtCrypto";
 import type { Session, Token } from "./types";
 
 const { expDiff, extDiff, cookieName, cookieOptions } = sessionToken;

@@ -2,12 +2,12 @@ import { type NextRequest, NextResponse } from "next/server";
 
 import { Types } from "mongoose";
 
-import { serverAuth, sessionToken } from "./lib/auth/config";
-import { decrypt, encrypt } from "./lib/auth/jwt";
+import { serverCred, sessionToken } from "./lib/auth/config";
+import { decrypt, encrypt } from "./lib/auth/jwtCrypto";
 import { getPathnameLocale, getPreferLocale } from "./lib/locale";
 import { locale } from "./lib/locale/config";
+import { applySetCookie } from "./lib/utils/applySetCookie";
 import { base64Url } from "./lib/utils/base64Url";
-import { applySetCookie } from "./lib/utils/middleware";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -45,7 +45,7 @@ export async function middleware(request: NextRequest) {
   // Authentication
   if (pathname.match(/\/auth\//)) {
     res.cookies.set({
-      name: serverAuth.cookieName,
+      name: serverCred.cookieName,
       value: generateAuth(),
     });
   }

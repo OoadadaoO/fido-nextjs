@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import { login } from "@/lib/auth";
-import { serverAuth } from "@/lib/auth/config";
+import { serverCred } from "@/lib/auth/config";
 import {
   Assertion,
   type AssertionValidationData,
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   }
 
   const [, challenge] = req.cookies
-    .get(serverAuth.cookieName)
+    .get(serverCred.cookieName)
     ?.value.split(".") || ["", ""];
   if (!challenge) {
     return NextResponse.json({ error: "Invalid cookie" }, { status: 400 });

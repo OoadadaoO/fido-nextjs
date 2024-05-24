@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { auth } from "@/lib/auth";
-import { serverAuth } from "@/lib/auth/config";
+import { serverCred } from "@/lib/auth/config";
 
 import { Back } from "./_components/Back";
 import { Login } from "./_components/Login";
@@ -17,7 +17,7 @@ export default async function Page() {
   }
 
   const [id, challenge] = cookies()
-    .get(serverAuth.cookieName)
+    .get(serverCred.cookieName)
     ?.value.split(".") || ["", ""];
 
   return (

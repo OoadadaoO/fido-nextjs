@@ -4,12 +4,12 @@ import { base64url } from "jose";
 
 import { privateEnv } from "../env/private";
 
-export const serverAuth: {
+export const serverCred: {
   cookieName: string;
   cookieOptions: Partial<ResponseCookie>;
 } = {
   cookieName:
-    privateEnv.NODE_ENV === "production" ? "____Secure.auth" : "__Dev.auth",
+    privateEnv.NODE_ENV === "production" ? "____Secure.cred" : "__Dev.cred",
   cookieOptions: {},
 };
 
