@@ -12,6 +12,7 @@ import { Credential, db, Session, User } from "@/lib/db";
 import { publicEnv } from "@/lib/env/public";
 
 export async function POST(req: NextRequest) {
+  // Get Metadata
   const username = req.nextUrl.searchParams.get("username");
   if (!username) {
     return NextResponse.json({ error: "Invalid query" }, { status: 400 });
@@ -35,48 +36,58 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid body" }, { status: 400 });
   }
 
+  // Validate Attestation & Register User
   const attestationJSON = zBody.data;
   const attestation = new Attestation(attestationJSON);
-  const data = attestation.validate(
+
+  const result = await registerUserAtom(
+    attestation,
     challenge,
-    publicEnv.NEXT_PUBLIC_BASE_URL,
-    publicEnv.NEXT_PUBLIC_RP_ID,
+    { id, name: username },
+    identifier,
   );
 
-  try {
-    const { user, credential, session } = await registerUserAtom(
-      { id, name: username },
-      identifier,
-      data,
+  if (result.error) {
+    return NextResponse.json(
+      { error: result.error },
+      { status: result.status },
     );
-    return NextResponse.json({ user, credential, session }, { status: 200 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
   }
+  return NextResponse.json(result, { status: 200 });
 }
 
 async function registerUserAtom(
+  attestation: Attestation,
+  challenge: string,
   user: { id: string; name: string },
   identifier: { os: string; browser: string; ip: string },
-  data: AttestationValidationData,
 ) {
-  let newUser, newCredential, newSession;
-
   const dbSession = await db.startSession();
   dbSession.startTransaction();
   try {
-    newUser = await User.create({
+    let data: AttestationValidationData;
+    try {
+      data = await attestation.validate(
+        challenge,
+        publicEnv.NEXT_PUBLIC_BASE_URL,
+        publicEnv.NEXT_PUBLIC_RP_ID,
+      );
+    } catch (error: any) {
+      throw new Error(`*401Invalid attestation: ${error.message}`);
+    }
+
+    const newUser = await User.create({
       _id: new mongoose.Types.ObjectId(user.id),
       username: user.name,
     });
-    newCredential = await Credential.create({
+    const newCredential = await Credential.create({
       credId: data.credId,
       aaguid: data.aaguid,
       counter: data.counter,
       publicKey: data.publicKey,
       ownerId: newUser._id,
     });
-    newSession = await Session.create({
+    const newSession = await Session.create({
       userId: newUser._id,
       credentialId: newCredential._id,
       identifier: { ...identifier, activeAt: new Date() },
@@ -85,10 +96,16 @@ async function registerUserAtom(
     await dbSession.commitTransaction();
 
     return { user: newUser, credential: newCredential, session: newSession };
-  } catch (err) {
-    console.error(err);
+  } catch (error: any) {
+    console.error(error);
     await dbSession.abortTransaction();
-    throw new Error("Database error");
+    if (error.message.startsWith("*")) {
+      return {
+        status: parseInt(error.message.slice(1)),
+        error: error.message.slice(4),
+      };
+    }
+    return { status: 500, error: "Database error" };
   } finally {
     dbSession.endSession();
   }

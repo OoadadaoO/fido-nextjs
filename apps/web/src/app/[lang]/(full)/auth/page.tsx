@@ -42,7 +42,7 @@ export default function Page() {
             <SignUp id={id} challenge={challenge} />
           </TabsContent>
           <TabsContent value="login">
-            <Login />
+            <Login challenge={challenge} />
           </TabsContent>
           {/* <TabsContent value="addkey">Change your password here.</TabsContent> */}
         </div>

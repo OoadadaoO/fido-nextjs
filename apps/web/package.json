@@ -15,6 +15,7 @@
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tabs": "^1.0.4",
+    "@simplewebauthn/server": "^10.0.0",
     "@types/negotiator": "^0.6.3",
     "axios": "^1.7.2",
     "cbor": "^9.0.2",

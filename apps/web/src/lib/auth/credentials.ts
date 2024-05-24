@@ -2,6 +2,12 @@ import cbor from "cbor";
 import crypto from "crypto";
 import { z } from "zod";
 
+import {
+  isoCrypto,
+  isoUint8Array,
+  type COSEPublicKeyEC2,
+} from "@simplewebauthn/server/helpers";
+
 import { base64Url } from "../utils/base64Url";
 
 export type CredentialBase = {
@@ -60,6 +66,9 @@ export type AttestationValidationData = {
   aaguid: string | undefined;
   counter: number;
   publicKey: string;
+};
+export type AssertionValidationData = {
+  counter: number;
 };
 
 export class Attestation {
@@ -121,11 +130,11 @@ export class Attestation {
     );
   }
 
-  validate(
+  async validate(
     challenge: string,
     origin: string,
     rpId: string,
-  ): AttestationValidationData {
+  ): Promise<AttestationValidationData> {
     const clientData = this.parseClientDataJSON();
 
     if (clientData.challenge !== challenge)
@@ -146,8 +155,10 @@ export class Attestation {
     if (
       attestationObject.authData.rpIdHash !==
       crypto.createHash("sha256").update(rpId).digest("base64url")
-    )
+    ) {
       throw new Error("Invalid RP ID hash!");
+    }
+
     return {
       credId: this.credential.id,
       aaguid: attestationObject.authData.attestationCredData.aaguid,
@@ -207,7 +218,17 @@ export class Assertion {
     );
   }
 
-  validate(challenge: string, origin: string, rpId: string, publicKey: string) {
+  parseUserHandle() {
+    return base64Url.encode(this.credential.response.userHandle);
+  }
+
+  async validate(
+    challenge: string,
+    origin: string,
+    rpId: string,
+    publicKey: string,
+    counter: number,
+  ) {
     const clientData = this.parseClientDataJSON();
 
     if (clientData.challenge !== challenge)
@@ -225,12 +246,30 @@ export class Assertion {
       throw new Error("Invalid RP ID hash!");
     if (!authenticatorData.flags.uv)
       throw new Error("User Verification is required!");
+    if (counter !== 0 && authenticatorData.counter <= counter)
+      throw new Error("Replay attack detected!");
+
+    const cosePublicKey: COSEPublicKeyEC2 = cbor.decodeAllSync(
+      base64Url.decode(publicKey),
+    )[0];
+    const clientDataHash = crypto
+      .createHash("sha256")
+      .update(Buffer.from(this.credential.response.clientDataJSON))
+      .digest();
+    const signatureBase = isoUint8Array.concat([
+      new Uint8Array(this.credential.response.authenticatorData),
+      clientDataHash,
+    ]);
+    const isVerified = await isoCrypto.verify({
+      cosePublicKey,
+      signature: new Uint8Array(this.credential.response.signature),
+      data: signatureBase,
+    });
+    if (!isVerified) throw new Error("Failed to verify signature!");
+
     return {
       counter: authenticatorData.counter,
-      credId: this.credential.id,
     };
-
-    publicKey;
   }
 }
 
