@@ -11,7 +11,7 @@
   "scripts": {
     "pkg-repo": "yarn workspace @fido/pkg-repo",
     "app-repo": "yarn workspace @fido/app-repo",
-    "mongoose": "yarn workspace @fido/mongoose",
+    "database": "yarn workspace @fido/database",
     "web": "yarn workspace @fido/web",
     "lint": "eslint ./apps/* ./packages/*",
     "format": "prettier --write ./apps/*/src ./packages/*/src",
