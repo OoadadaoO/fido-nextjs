@@ -28,7 +28,7 @@ const features = [
 
 export default function Home() {
   return (
-    <div className="mx-auto grid w-full max-w-[900px] grid-cols-1 gap-6 px-6 py-12">
+    <div className="mx-auto grid w-full max-w-[900px] grid-cols-1 gap-6 px-4 py-12 md:px-6">
       <section className="py-20 text-center">
         <h1 className="mb-8 grid gap-y-2 text-3xl font-bold tracking-tight text-foreground">
           Welcome to Our FIDO2 Authentication Demo
@@ -54,7 +54,7 @@ export default function Home() {
         </a>
       </section>
 
-      <section className="relative rounded-2xl p-4 text-center">
+      <section className="relative rounded-2xl p-2 text-center md:p-4">
         <div className="absolute -inset-3 bg-muted/80 blur-2xl" />
         <div className="relative z-10 grid grid-cols-1 gap-4 md:grid-cols-2">
           {features.map((feature, i) => (

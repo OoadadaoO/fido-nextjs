@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import Image from "next/image";
 
 import { format } from "date-fns";
-import { AppWindow, KeyRound } from "lucide-react";
+import { AppWindow, KeyRound, MapPin } from "lucide-react";
 
 import {
   Card,
@@ -100,7 +100,8 @@ export default async function Page() {
               <div className="grid flex-1">
                 <CardTitle className="truncate text-xl">{cred.name}</CardTitle>
                 <CardDescription>
-                  Created: {format(cred.createdAt, "yyyy-MM-dd HH:mm")}
+                  <span className="hidden sm:inline">Created: </span>
+                  {format(cred.createdAt, "yyyy-MM-dd HH:mm")}
                 </CardDescription>
               </div>
               <div className="space-x-2">
@@ -117,11 +118,11 @@ export default async function Page() {
               </div>
             </div>
           </CardHeader>
-          <CardContent className="grid gap-3 px-1 pb-1">
+          <CardContent className="grid px-1 pb-3">
             {cred.sessions.map((session) => (
               <div
                 key={session.id}
-                className="group ml-[60px] flex items-center justify-between gap-6 rounded-sm px-5 py-3 hover:bg-muted"
+                className="group flex items-center justify-between gap-6 rounded-sm px-5 py-3 hover:bg-muted md:ml-[60px]"
               >
                 <div>
                   <AppWindow
@@ -131,16 +132,17 @@ export default async function Page() {
                 </div>
                 <div className="grid flex-1">
                   <h2 className="mt-1 font-semibold">
-                    {session.identifier.os} - {session.identifier.browser}
+                    {session.identifier.browser} on {session.identifier.os}
                   </h2>
                   <CardDescription>
-                    Latest:{" "}
+                    <span className="hidden sm:inline">Latest: </span>
+
                     {format(session.identifier.activeAt, "yyyy-MM-dd HH:mm")}
                   </CardDescription>
                 </div>
                 {session.id === token.sid ? (
-                  <div className="select-none text-muted-foreground">
-                    You are here.
+                  <div className="w-10 select-none text-muted-foreground">
+                    <MapPin size={24} className="mx-auto" />
                   </div>
                 ) : (
                   <SessionDelete sessionId={session.id} />

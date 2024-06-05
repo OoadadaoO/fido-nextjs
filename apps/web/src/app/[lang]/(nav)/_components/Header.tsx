@@ -203,11 +203,11 @@ function UserButton({
         variant="default"
         size="icon"
         className={cn(
-          "group rounded-full bg-transparent p-2 md:bg-primary",
+          "group rounded-full bg-transparent p-2 text-foreground hover:text-primary-foreground md:bg-primary md:text-primary-foreground",
           className,
         )}
       >
-        <Fingerprint className="aspect-square transition-all group-hover:scale-110" />
+        <Fingerprint className="aspect-square transition-transform group-hover:scale-110" />
         <span className="sr-only">Toggle user menu</span>
       </Button>
     </a>
