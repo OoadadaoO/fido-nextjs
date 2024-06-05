@@ -8,7 +8,7 @@ export const locale: {
   cookieName: string;
   cookieOptions: Partial<ResponseCookie>;
 } = {
-  accepts: ["en-US", "zh-TW"],
+  accepts: ["en-US"],
   default: "en-US",
   cookieName:
     privateEnv.NODE_ENV === "production" ? "____Secure.locale" : "__Dev.locale",

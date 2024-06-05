@@ -1,4 +1,4 @@
-export default function Home() {
+export default function Page() {
   return (
     <div className="mx-auto w-[50%] max-w-[1200px] bg-background p-6 text-foreground">
       Lorem quis tempor Lorem consequat. Sunt mollit mollit culpa in quis.

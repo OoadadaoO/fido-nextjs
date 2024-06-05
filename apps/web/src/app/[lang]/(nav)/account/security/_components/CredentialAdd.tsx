@@ -1,14 +1,14 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { type FormEvent } from "react";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import axios from "axios";
+import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useSession } from "@/hook/SessionContext";
 import { Attestation, type AttestationObj } from "@/lib/auth/credentials";
 import { getIdAxios } from "@/lib/axios";
 import { publicEnv } from "@/lib/env/public";
@@ -19,15 +19,22 @@ type Props = {
   challenge: string;
 };
 
-export function SignUp({ id, challenge }: Props) {
-  // challenge from cookie
-  const [username, setUsername] = useState<string>("");
+export function CredentialAdd({ challenge, id }: Props) {
   const router = useRouter();
+  const { ready, session } = useSession();
+  if (!session || !session.user) {
+    return null;
+  }
 
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!ready) return;
 
     const idAxiosPromise = getIdAxios();
+
+    while (!navigator.credentials) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
 
     // create public key
     const publicKey: PublicKeyCredentialCreationOptions = {
@@ -38,8 +45,8 @@ export function SignUp({ id, challenge }: Props) {
       },
       user: {
         id: base64Url.decode(id),
-        name: username,
-        displayName: username,
+        name: session.user.username,
+        displayName: session.user.username,
       },
       pubKeyCredParams: [
         { type: "public-key", alg: -7 },
@@ -65,7 +72,7 @@ export function SignUp({ id, challenge }: Props) {
 
       const idAxios = await idAxiosPromise;
       const res = await idAxios.post(
-        `/api/auth/register?${new URLSearchParams({ username })}`,
+        `/api/auth/register?${new URLSearchParams({ username: session.user.username, redundant: "true" })}`,
         attestationJSON,
       );
       console.log(res.data);
@@ -80,43 +87,10 @@ export function SignUp({ id, challenge }: Props) {
   };
 
   return (
-    <div className="flex w-[330px] flex-col gap-8">
-      <div className="flex flex-col gap-2 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">Sign Up</h1>
-        <p className="text-sm text-muted-foreground">
-          Use your trust model to create an account.
-        </p>
-      </div>
-      <form className="grid gap-2" onSubmit={handleRegister}>
-        <Input
-          type="text"
-          name="username"
-          placeholder="Your username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <Button variant="default" size="sm" className="w-full" type="submit">
-          Continue
-        </Button>
-      </form>
-      <p className="px-8 text-center text-sm text-muted-foreground">
-        By clicking continue, you agree to our{" "}
-        <Link
-          href="#"
-          className="underline underline-offset-4 hover:text-primary"
-        >
-          Terms of Service
-        </Link>{" "}
-        and{" "}
-        <Link
-          href="#"
-          className="underline underline-offset-4 hover:text-primary"
-        >
-          Privacy Policy
-        </Link>
-        .
-      </p>
-    </div>
+    <form className="w-full" onSubmit={handleRegister}>
+      <Button className="w-full">
+        <Plus size={24} />
+      </Button>
+    </form>
   );
 }

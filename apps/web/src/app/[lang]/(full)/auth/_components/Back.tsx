@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 export function Back({ className }: { className?: string }) {
   const router = useRouter();

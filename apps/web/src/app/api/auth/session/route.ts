@@ -11,7 +11,7 @@ export async function GET(): Promise<NextResponse<GetSessionResponse>> {
     cookies().delete(sessionToken.cookieName);
     return NextResponse.json(
       { error: { code: 0, message: session.message } },
-      { status: 400 },
+      { status: 200 },
     );
   }
   return NextResponse.json({ data: session }, { status: 200 });

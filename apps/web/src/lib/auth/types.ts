@@ -12,6 +12,7 @@ export type Session =
     };
 
 export type Token = {
-  sub: string; // session id
+  sub: string; // user id
+  sid: string; // session id
   iat: number; // issued at
 };

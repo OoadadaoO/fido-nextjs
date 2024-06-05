@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 
-import { Header } from "./_components-layout/Header";
+import { Header } from "./_components/Header";
 
 export default async function NavLayout({
   children,

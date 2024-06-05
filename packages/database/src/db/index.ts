@@ -10,6 +10,9 @@ import {
   type SessionDocument,
   type SessionModel,
   SessionSchema,
+  AAGUIDSchema,
+  type AAGUIDModel,
+  type AAGUIDDocument,
 } from "../schemas";
 
 export class Db {
@@ -44,6 +47,7 @@ class Model {
   public User: UserModel;
   public Credential: CredentialModel;
   public Session: SessionModel;
+  public AAGUID: AAGUIDModel;
 
   constructor(db: mongoose.Connection) {
     this.db = db;
@@ -55,6 +59,10 @@ class Model {
     this.Session = this.db.model<SessionDocument, SessionModel>(
       "Session",
       SessionSchema,
+    );
+    this.AAGUID = this.db.model<AAGUIDDocument, AAGUIDModel>(
+      "AAGUID",
+      AAGUIDSchema,
     );
   }
 }

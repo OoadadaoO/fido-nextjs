@@ -39,6 +39,15 @@ export async function auth(identifier?: Identifier): Promise<Session> {
   // };
 }
 
+/**
+ * (lightweight auth by only parse cookies)
+ */
+export async function lAuth(): Promise<Token | undefined> {
+  const { jwt, token } = await getToken();
+  if (!token || !jwt) return undefined;
+  return token;
+}
+
 type LoginParams = {
   userId: string;
   credentialId: string;
@@ -58,7 +67,10 @@ export async function login(params: LoginParams) {
     });
 
     // refresh token
-    const jwt = await encrypt({ sub: session.id }, issuedAt);
+    const jwt = await encrypt(
+      { sub: params.userId, sid: session.id },
+      issuedAt,
+    );
     cookies().set(cookieName, jwt, {
       expires: expireAt,
       ...cookieOptions,
@@ -78,8 +90,8 @@ export async function logout() {
   cookies().delete(cookieName);
 
   // remove session
-  const { sub } = token;
-  await SessionModel.findByIdAndDelete(sub).exec();
+  const { sid } = token;
+  await SessionModel.findByIdAndDelete(sid).exec();
 }
 
 async function getToken() {
@@ -102,14 +114,14 @@ export async function getSession({
   token: Token;
   identifier?: Identifier;
 }): Promise<Session | string> {
-  const { sub, iat } = token;
+  const { sid, iat } = token;
 
-  const existedSession = await SessionModel.findById(sub).exec();
+  const existedSession = await SessionModel.findById(sid).exec();
   if (!existedSession) return "Session out of date";
 
   // update session
   const updatedSession = await SessionModel.findByIdAndUpdate(
-    sub,
+    sid,
     {
       identifier: {
         ...existedSession.identifier,

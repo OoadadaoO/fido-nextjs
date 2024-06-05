@@ -21,8 +21,8 @@ export default async function Page() {
     ?.value.split(".") || ["", ""];
 
   return (
-    <div className="grid h-dvh grid-cols-1 p-3 lg:grid-cols-2">
-      <div className="hidden overflow-hidden rounded-2xl lg:block">
+    <div className="flex h-dvh p-3">
+      <div className="hidden max-w-[1024px] flex-1 overflow-hidden rounded-2xl lg:block">
         <Image
           className="h-full object-cover brightness-125 contrast-125 dark:brightness-[80%]"
           src="/background.png"
@@ -34,7 +34,7 @@ export default async function Page() {
       </div>
       <Tabs
         defaultValue="login"
-        className="flex flex-col items-center justify-between"
+        className="mx-auto flex flex-1 flex-col items-center justify-between"
       >
         <div className="flex w-full items-center justify-between px-3 py-3 lg:pl-6">
           <TabsList>
@@ -54,7 +54,7 @@ export default async function Page() {
           {/* <TabsContent value="addkey">Change your password here.</TabsContent> */}
         </div>
         <div className="pt-6 text-sm tracking-tight text-muted-foreground">
-          Powered by FIDO APP
+          Powered by FIDOG
         </div>
       </Tabs>
     </div>

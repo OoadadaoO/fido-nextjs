@@ -1,7 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { Types } from "mongoose";
-
 import { serverCred, sessionToken } from "./lib/auth/config";
 import { decrypt, encrypt } from "./lib/auth/jwtCrypto";
 import { getPathnameLocale, getPreferLocale } from "./lib/locale";
@@ -9,13 +7,22 @@ import { locale } from "./lib/locale/config";
 import { applySetCookie } from "./lib/utils/applySetCookie";
 import { base64Url } from "./lib/utils/base64Url";
 
+const authMatch = /^\/auth\/.*$/;
+
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, searchParams } = request.nextUrl;
   const res = NextResponse.next();
 
   // refresh session
   const oldJwt = request.cookies.get(sessionToken.cookieName)?.value;
   if (oldJwt) {
+    // redirect to home page if on login & signup page
+    if (authMatch.test(pathname))
+      return Response.redirect(
+        new URL(searchParams.get("redirect") || "/", request.url),
+      );
+
+    // refresh jwt
     const expires = new Date(Date.now() + sessionToken.expDiff);
     const token = await decrypt(oldJwt);
     if (!token) return Response.redirect(new URL("/", request.url));
@@ -43,12 +50,10 @@ export async function middleware(request: NextRequest) {
   });
 
   // Authentication
-  if (pathname.match(/\/auth\//)) {
-    res.cookies.set({
-      name: serverCred.cookieName,
-      value: generateAuth(),
-    });
-  }
+  res.cookies.set({
+    name: serverCred.cookieName,
+    value: generateCred(),
+  });
 
   applySetCookie(request, res);
 
@@ -63,9 +68,16 @@ export const config = {
   ],
 };
 
-function generateAuth() {
-  const id = new Types.ObjectId().toHexString();
+function generateCred() {
+  const id = ObjectId();
   const randomBytes = crypto.getRandomValues(new Uint8Array(32));
   const challenge = base64Url.encode(randomBytes);
   return `${id}.${challenge}`;
+}
+
+function ObjectId() {
+  const timestamp = ((Date.now() / 1000) | 0).toString(16);
+  const rand = crypto.getRandomValues(new Uint8Array(8));
+  const hexRand = Buffer.from(rand).toString("hex");
+  return timestamp + hexRand;
 }

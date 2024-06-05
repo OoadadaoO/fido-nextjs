@@ -41,5 +41,6 @@ const db = dbInstance.db;
 const User = dbInstance.models.User;
 const Credential = dbInstance.models.Credential;
 const Session = dbInstance.models.Session;
+const AAGUID = dbInstance.models.AAGUID;
 
-export { db, User, Credential, Session };
+export { db, User, Credential, Session, AAGUID };

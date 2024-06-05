@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import mongoose from "mongoose";
 
-import { login } from "@/lib/auth";
+import { lAuth, login } from "@/lib/auth";
 import { serverCred } from "@/lib/auth/config";
 import {
   Attestation,
@@ -14,8 +14,11 @@ import { publicEnv } from "@/lib/env/public";
 
 export async function POST(req: NextRequest) {
   // Get Metadata
+  const token = await lAuth();
   const username = req.nextUrl.searchParams.get("username");
-  if (!username) {
+  const redundant = req.nextUrl.searchParams.get("redundant") === "true";
+  console.log("redundant", redundant);
+  if (!username && !token) {
     return NextResponse.json({ error: "Invalid query" }, { status: 400 });
   }
 
@@ -44,8 +47,9 @@ export async function POST(req: NextRequest) {
   const result = await registerUserAtom(
     attestation,
     challenge,
-    { id, name: username },
+    { id: redundant ? token!.sub : id, name: username || "" },
     identifier,
+    redundant,
   );
 
   if (result.error) {
@@ -62,6 +66,7 @@ async function registerUserAtom(
   challenge: string,
   user: { id: string; name: string },
   identifier: { os: string; browser: string; ip: string },
+  redundant: boolean,
 ) {
   const dbSession = await db.startSession();
   dbSession.startTransaction();
@@ -77,23 +82,33 @@ async function registerUserAtom(
       throw new Error(`*401Invalid attestation`);
     }
 
-    const newUser = await User.create({
-      _id: new mongoose.Types.ObjectId(user.id),
-      username: user.name,
-    });
-    const newCredential = await Credential.create({
-      credId: data.credId,
-      aaguid: data.aaguid,
-      counter: data.counter,
-      publicKey: data.publicKey,
-      ownerId: newUser._id,
-    });
+    if (redundant) {
+      await Credential.create({
+        credId: data.credId,
+        aaguid: data.aaguid,
+        counter: data.counter,
+        publicKey: data.publicKey,
+        ownerId: user.id,
+      });
+    } else {
+      const newUser = await User.create({
+        _id: new mongoose.Types.ObjectId(user.id),
+        username: user.name,
+      });
+      const newCredential = await Credential.create({
+        credId: data.credId,
+        aaguid: data.aaguid,
+        counter: data.counter,
+        publicKey: data.publicKey,
+        ownerId: newUser._id,
+      });
 
-    await login({
-      userId: newUser.id,
-      credentialId: newCredential.id,
-      identifier,
-    });
+      await login({
+        userId: newUser.id,
+        credentialId: newCredential.id,
+        identifier,
+      });
+    }
     await dbSession.commitTransaction();
 
     return {};

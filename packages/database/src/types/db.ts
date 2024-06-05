@@ -30,3 +30,12 @@ export type CredentialType = {
   createdAt: Date;
   approvedAt: Date;
 };
+
+export type AAGUIDType = {
+  id: string;
+  name: string;
+  icon_dark: string;
+  icon_light: string;
+  official: boolean;
+  status?: string[];
+};

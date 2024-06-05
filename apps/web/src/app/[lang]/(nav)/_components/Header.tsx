@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
-import { Menu, CircleUser } from "lucide-react";
+import { Menu, CircleUser, Fingerprint } from "lucide-react";
 import { Moon, Sun } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ import {
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import { useTheme } from "@/hook/ThemeProvider";
 import type { Session } from "@/lib/auth/types";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 import { LoginItem } from "./LoginItem";
 import { LogoutItem } from "./LogoutItem";
@@ -30,26 +30,38 @@ const navigations = [
     onlyMobile: false,
   },
   {
-    id: "events",
-    url: "/events/",
-    onlyMobile: false,
-  },
-  {
-    id: "registration",
-    url: "/registration/",
-    onlyMobile: false,
-  },
-  {
-    id: "documents",
-    url: "/documents/",
-    onlyMobile: false,
-  },
-  {
-    id: "favorites",
-    url: "/favorites/",
+    id: "notes",
+    url: "/notes/",
     onlyMobile: false,
   },
 ];
+// const navigations = [
+//   {
+//     id: "home",
+//     url: "/",
+//     onlyMobile: false,
+//   },
+//   {
+//     id: "events",
+//     url: "/events/",
+//     onlyMobile: false,
+//   },
+//   {
+//     id: "registration",
+//     url: "/registration/",
+//     onlyMobile: false,
+//   },
+//   {
+//     id: "documents",
+//     url: "/documents/",
+//     onlyMobile: false,
+//   },
+//   {
+//     id: "favorites",
+//     url: "/favorites/",
+//     onlyMobile: false,
+//   },
+// ];
 
 export function Header({ session }: { session: Session }) {
   const isLogin = !!session?.user;
@@ -61,13 +73,13 @@ export function Header({ session }: { session: Session }) {
         <SheetTrigger asChild>
           <div className="flex-1 shrink-0 lg:hidden">
             <Button variant="outline" size="icon">
-              <Menu className="h-5 w-5" />
+              <Menu className="size-6" />
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
           </div>
         </SheetTrigger>
         <SheetContent side="left">
-          <h1 className="text-2xl font-semibold">Fido App</h1>
+          <h1 className="text-2xl font-semibold">Fi-Dog</h1>
           <div className="my-4 h-[1px] w-full border-b border-border" />
           <nav className="grid gap-6 text-lg font-medium">
             {navigations.map((nav) => (
@@ -88,18 +100,21 @@ export function Header({ session }: { session: Session }) {
         </SheetContent>
       </Sheet>
       <a
-        href="#"
-        className="mr-4 flex w-10 items-center gap-2 text-lg font-semibold lg:flex-1"
+        href="/"
+        className="flex w-fit items-center gap-1 font-serif text-2xl font-semibold tracking-wide lg:flex-1"
       >
+        <p className="hidden sm:block"> FI</p>
         <Image
           src="/logo.png"
           alt="TZC"
-          width={40}
-          height={40}
+          width={48}
+          height={48}
           priority
-          className="brightness-95 dark:brightness-100"
+          className="brightness-110 dark:brightness-100"
         />
-        <span className="sr-only">FIDO App</span>
+        <p className="hidden sm:block">
+          DO<span className="text-xs">G</span>
+        </p>
       </a>
       <nav className="hidden flex-col gap-6 text-lg font-medium lg:flex lg:flex-row lg:items-center lg:gap-6 lg:text-sm">
         {navigations.map(
@@ -119,24 +134,9 @@ export function Header({ session }: { session: Session }) {
             ),
         )}
       </nav>
-      <div className="flex w-full flex-1 items-center justify-end gap-4 lg:gap-4">
+      <div className="flex w-full flex-1 items-center justify-end gap-2">
         <ThemeButton className="hidden lg:block" />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="secondary" size="icon" className="rounded-full">
-              <CircleUser className="h-5 w-5" />
-              <span className="sr-only">Toggle user menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            {isLogin ? <LogoutItem /> : <LoginItem />}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <UserButton isLogin={isLogin} pathname={pathname} />
       </div>
     </header>
   );
@@ -155,10 +155,58 @@ function ThemeButton({ className }: { className?: string }) {
     >
       {/* {theme === "light" ? "☀️" : "🌙"} */}
       {theme === "light" ? (
-        <Sun className="aspect-square" />
+        <Sun className="aspect-square transition-transform hover:rotate-45" />
       ) : (
-        <Moon className="aspect-square" />
+        <Moon className="aspect-square transition-transform hover:rotate-45" />
       )}
     </Button>
+  );
+}
+
+function UserButton({
+  className,
+  isLogin,
+  pathname,
+}: {
+  className?: string;
+  isLogin: boolean;
+  pathname: string;
+}) {
+  return isLogin ? (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="secondary"
+          size="icon"
+          className={cn("rounded-full p-2", className)}
+        >
+          <CircleUser className="aspect-square" />
+          <span className="sr-only">Toggle user menu</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+          <a href="/account/security">Security</a>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="text-muted-foreground">
+          Support
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        {isLogin ? <LogoutItem /> : <LoginItem />}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ) : (
+    <a href={`/auth?redirect=${pathname}`}>
+      <Button
+        variant="default"
+        size="icon"
+        className={cn("group rounded-full p-2", className)}
+      >
+        <Fingerprint className="aspect-square transition-all group-hover:scale-110" />
+        <span className="sr-only">Toggle user menu</span>
+      </Button>
+    </a>
   );
 }
