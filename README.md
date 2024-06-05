@@ -1,45 +1,26 @@
-# Yarn Monorepo
+# FIDO-APP
 
-## More Features
+This is a monorepo for FIDO2 authentication applications.
 
-### Top-level Await
+## Getting Started
 
-Add a [`loader.js`](loader.js) file to the root of the project just like in the demo.
+> All the command below should be executed in the root of this repo.
 
-Use it as loader in the _repo_ `package.json` scripts.
+### Prerequisites
 
-```json
-{
-  "scripts": {
-    "start": "node --import ../../loader.js dist/index.js"
-  }
-}
+- Node.js v20
+- Yarn v1.22
+
+> If you have not installed Node.js and Yarn or have any problem with versioning, you can install them by following this [Guide to Installation](https://adada1024.notion.site/NodeJs-f9a83de221e64e46ba930a62246f2256).
+
+### Install the Dependencies
+
+```bash
+yarn install --frozen-lockfile
+# or you want to update the dependencies (might cause unmet dependencies)
+yarn install
 ```
 
-### Directory Import
+### Run the Applications
 
-In the _root_ `tsconfig.json`, set
-
-```json
-{
-  "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node"
-  }
-}
-```
-
-Let the _repo_ `tsconfig.json` inherit from the _root_ `tsconfig.json`.
-
-```json
-{
-  "extends": "../../tsconfig.json"
-}
-```
-
-### ESLint & Prettier
-
-Add the _root_ `.eslintrc.cjs`, `tsconfig.eslint.json` just like in the demo.
-
-Add the _root_ `.prettierrc.cjs` just like in the demo.
+See [FIDOG](apps/web/README.md) and [Scheduler](apps/scheduler/README.md) for more details.

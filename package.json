@@ -9,11 +9,9 @@
     "packages/*"
   ],
   "scripts": {
-    "pkg-repo": "yarn workspace @fido/pkg-repo",
-    "app-repo": "yarn workspace @fido/app-repo",
-    "database": "yarn workspace @fido/database",
     "web": "yarn workspace @fido/web",
     "scheduler": "yarn workspace @fido/scheduler",
+    "database": "yarn workspace @fido/database",
     "lint": "eslint ./apps/* ./packages/*",
     "format": "prettier --write ./apps/*/src ./packages/*/src",
     "type-check": "tsc --noEmit"

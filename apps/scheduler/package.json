@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc --build",
-    "start": "node --import ../../loader.js dist/index.js"
+    "start": "node --import ../../loader.js dist/index.js",
+    "once": "node --import ../../loader.js dist/once.js"
   },
   "type": "module",
   "dependencies": {

@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Fidog",
-  description: "A simple app authenticating users with Fido2",
+  description: "A web application with FIDO2 authentication.",
   icons: [
     {
       url: `/favicon.ico`,
