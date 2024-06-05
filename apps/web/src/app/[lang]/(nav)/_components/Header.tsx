@@ -30,8 +30,8 @@ const navigations = [
     onlyMobile: false,
   },
   {
-    id: "notes",
-    url: "/notes/",
+    id: "guides",
+    url: "/guides/",
     onlyMobile: false,
   },
 ];
@@ -79,7 +79,7 @@ export function Header({ session }: { session: Session }) {
           </div>
         </SheetTrigger>
         <SheetContent side="left">
-          <h1 className="text-2xl font-semibold">Fi-Dog</h1>
+          <h1 className="font-mono text-4xl font-semibold">FIDOG</h1>
           <div className="my-4 h-[1px] w-full border-b border-border" />
           <nav className="grid gap-6 text-lg font-medium">
             {navigations.map((nav) => (
@@ -101,19 +101,19 @@ export function Header({ session }: { session: Session }) {
       </Sheet>
       <a
         href="/"
-        className="flex w-fit items-center gap-1 font-serif text-2xl font-semibold tracking-wide lg:flex-1"
+        className="flex w-fit items-center gap-1 font-mono text-3xl font-semibold tracking-wider lg:flex-1"
       >
-        <p className="hidden sm:block"> FI</p>
+        <p className="hidden sm:block"> FID</p>
         <Image
           src="/logo.png"
           alt="TZC"
           width={48}
           height={48}
           priority
-          className="brightness-110 dark:brightness-100"
+          className="w-12 brightness-110 sm:w-9 dark:brightness-100"
         />
         <p className="hidden sm:block">
-          DO<span className="text-xs">G</span>
+          <span className="text-xl">G</span>
         </p>
       </a>
       <nav className="hidden flex-col gap-6 text-lg font-medium lg:flex lg:flex-row lg:items-center lg:gap-6 lg:text-sm">
@@ -202,7 +202,10 @@ function UserButton({
       <Button
         variant="default"
         size="icon"
-        className={cn("group rounded-full p-2", className)}
+        className={cn(
+          "group rounded-full bg-transparent p-2 md:bg-primary",
+          className,
+        )}
       >
         <Fingerprint className="aspect-square transition-all group-hover:scale-110" />
         <span className="sr-only">Toggle user menu</span>

@@ -1,55 +1,77 @@
+const features = [
+  {
+    title: "What you know",
+    description:
+      "Securely authenticate using a PIN with Windows Hello integration.",
+  },
+  {
+    title: "What you have",
+    description:
+      "Securely authenticate using a hardware security key, such as a YubiKey.",
+  },
+  {
+    title: "Who you are",
+    description:
+      "Securely authenticate using biometric recognition, such as fingerprint or facial recognition.",
+  },
+  {
+    title: "Trust Platform Module",
+    description:
+      "Hardware-based security chip that securely stores passkeys and performs cryptographic operations privately.",
+  },
+  {
+    title: "Passkey Management",
+    description:
+      "Effortlessly manage your passkeys and related sessions for enhanced security.",
+  },
+];
+
 export default function Home() {
   return (
-    <div className="mx-auto w-[50%] max-w-[1200px] bg-background p-6 text-foreground">
-      Lorem quis tempor Lorem consequat. Sunt mollit mollit culpa in quis.
-      Dolore cupidatat tempor pariatur consequat occaecat laboris fugiat minim
-      magna. Ut minim quis fugiat occaecat nulla cillum cillum velit consequat
-      est ipsum. Id duis ea ad ut consectetur ullamco laborum minim nostrud anim
-      esse. Non sunt nostrud nostrud eu. Qui fugiat cillum voluptate occaecat
-      cupidatat. Dolor aliquip et irure dolor dolor ad excepteur ex officia enim
-      consequat ad in aute. Enim do non Lorem et enim aliqua. Ipsum exercitation
-      ad nisi fugiat quis. Amet velit aute adipisicing ex. Non voluptate nostrud
-      quis amet dolor adipisicing voluptate consectetur eiusmod. In excepteur
-      nisi tempor fugiat Lorem duis Lorem. Adipisicing sunt ea occaecat non.
-      Pariatur elit dolore velit aute officia deserunt. Ea ullamco proident et
-      fugiat commodo cupidatat mollit eiusmod labore nulla et. Ad laboris
-      aliquip nostrud exercitation adipisicing elit incididunt ad aute amet
-      labore. Non do do ipsum officia esse sit enim cupidatat. Mollit quis qui
-      quis mollit cupidatat officia voluptate laborum voluptate aliqua nulla
-      consequat magna sint. Deserunt id Lorem est culpa fugiat ut anim aute
-      Lorem aliqua labore fugiat. Nisi cillum labore esse laboris. Elit anim
-      cupidatat incididunt eiusmod ad veniam cillum exercitation mollit labore
-      velit. Officia ea occaecat irure tempor elit laboris fugiat cupidatat
-      magna id do ad. Do elit pariatur minim exercitation est exercitation.
-      Commodo nostrud velit eiusmod pariatur labore commodo fugiat occaecat.
-      Ipsum occaecat eiusmod minim reprehenderit irure dolor qui dolore.
-      Reprehenderit id dolore cupidatat qui sunt. Anim irure nostrud esse
-      reprehenderit eiusmod esse occaecat laborum magna commodo culpa. Dolore
-      elit quis ipsum aliqua sit duis adipisicing adipisicing veniam esse id
-      labore. Commodo pariatur magna enim duis culpa ex sit fugiat labore enim
-      est Lorem eiusmod esse. Reprehenderit consectetur adipisicing culpa
-      incididunt. Pariatur sunt aute aute proident sit. Cillum irure non tempor
-      enim sit. Mollit culpa ullamco mollit ad dolor ad sunt est amet et. Eu id
-      ex occaecat esse magna mollit. Ex minim aliqua velit aute. Laboris dolore
-      voluptate aute occaecat enim cillum adipisicing voluptate cillum ullamco
-      adipisicing consequat. Ut quis tempor adipisicing reprehenderit consequat
-      id tempor excepteur. Eu enim ad est tempor eiusmod non tempor consectetur
-      incididunt magna proident tempor ullamco est. Labore ad commodo
-      exercitation ullamco culpa irure consectetur officia in minim in officia
-      tempor. Amet exercitation eu do cupidatat ex occaecat labore est et
-      eiusmod tempor consectetur. Aute ea ullamco fugiat non id id id consequat
-      nostrud irure reprehenderit. Ipsum cillum aliqua id irure aliquip est
-      fugiat qui esse anim. Pariatur cupidatat consequat velit sint incididunt.
-      Voluptate eiusmod dolor et ea laborum cillum aute amet eiusmod mollit
-      sint. Laboris consectetur dolore proident amet. Amet pariatur enim enim
-      sint. Commodo aliqua ea laboris excepteur officia mollit. Dolor esse nulla
-      aliquip ipsum Lorem ad nulla aliquip fugiat. Veniam deserunt fugiat Lorem
-      ipsum labore enim irure mollit. Et amet duis magna culpa in amet dolor.
-      Voluptate nisi sit do duis laborum Lorem ut eu pariatur commodo ullamco
-      do. Voluptate voluptate enim aute duis in sint deserunt reprehenderit est
-      officia est velit. Anim quis cillum sint fugiat eiusmod quis nulla
-      deserunt enim minim eu aute commodo irure. Officia consequat magna non
-      amet culpa.
+    <div className="mx-auto grid w-full max-w-[900px] grid-cols-1 gap-6 px-6 py-12">
+      <section className="py-20 text-center">
+        <h1 className="mb-8 grid gap-y-2 text-3xl font-bold tracking-tight text-foreground">
+          Welcome to Our FIDO2 Authentication Demo
+          <span className="block font-mono text-6xl font-bold tracking-wider">
+            FIDOG!
+          </span>
+        </h1>
+        <div className="mb-8 grid gap-y-1 text-lg text-muted-foreground">
+          <p>
+            Are you in search of a more secure and convenient way of
+            authentication?
+          </p>
+          <p>
+            FIDO Authentication is the robust ,seamless, and secure solution
+            you've been looking for!
+          </p>
+        </div>
+        <a
+          href="#"
+          className="inline-block rounded-full bg-primary px-6 py-2 font-semibold text-primary-foreground transition duration-300 hover:bg-primary/80"
+        >
+          Start Demo
+        </a>
+      </section>
+
+      <section className="relative rounded-2xl p-4 text-center">
+        <div className="absolute -inset-3 bg-muted/80 blur-2xl" />
+        <div className="relative z-10 grid grid-cols-1 gap-4 md:grid-cols-2">
+          {features.map((feature, i) => (
+            <div
+              key={feature.title}
+              className={`group select-none rounded-2xl bg-background p-6 shadow-sm shadow-muted-foreground/40 transition-transform hover:scale-[1.02] hover:cursor-pointer ${i === features.length - 1 && i % 2 === 0 ? "md:col-span-2" : ""}`}
+            >
+              <h3 className="mb-3 text-lg font-semibold text-foreground transition-transform group-hover:scale-105">
+                {feature.title}
+              </h3>
+              <p className="text-muted-foreground transition-transform group-hover:scale-105">
+                {feature.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
