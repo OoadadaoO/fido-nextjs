@@ -2,7 +2,6 @@
   "name": "fido-app",
   "version": "1.0.0",
   "description": "A monorepo setup with yarn workspaces, typescript, eslint, and prettier, with ability to use top-level await and directory imports",
-  "license": "MIT",
   "private": true,
   "workspaces": [
     "apps/*",
