@@ -29,10 +29,11 @@ export function SessionDelete(props: Props) {
   const handleDelete = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await axios.post(`/api/sessions/${props.sessionId}`);
-      router.refresh();
+      await axios.delete(`/api/sessions/${props.sessionId}`);
     } catch (error) {
       console.error(error);
+    } finally {
+      router.refresh();
     }
   };
 

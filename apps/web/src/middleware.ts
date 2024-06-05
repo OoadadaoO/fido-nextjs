@@ -7,7 +7,8 @@ import { locale } from "./lib/locale/config";
 import { applySetCookie } from "./lib/utils/applySetCookie";
 import { base64Url } from "./lib/utils/base64Url";
 
-const authMatch = /^\/auth\/.*$/;
+const authMatch = /^.*\/auth\/.*$/;
+const privateMatch = /^.*\/(account)\/.*$/;
 
 export async function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
@@ -17,15 +18,16 @@ export async function middleware(request: NextRequest) {
   const oldJwt = request.cookies.get(sessionToken.cookieName)?.value;
   if (oldJwt) {
     // redirect to home page if on login & signup page
-    if (authMatch.test(pathname))
+    if (authMatch.test(pathname)) {
       return Response.redirect(
         new URL(searchParams.get("redirect") || "/", request.url),
       );
+    }
 
     // refresh jwt
     const expires = new Date(Date.now() + sessionToken.expDiff);
     const token = await decrypt(oldJwt);
-    if (!token) return Response.redirect(new URL("/", request.url));
+    if (!token) return Response.redirect(new URL("/auth/", request.url));
     const newJwt = await encrypt(token, expires);
     const res = NextResponse.next();
     res.cookies.set({
@@ -34,6 +36,11 @@ export async function middleware(request: NextRequest) {
       expires,
       ...sessionToken.cookieOptions,
     });
+  } else {
+    // redirect to login page if on private page
+    if (privateMatch.test(pathname)) {
+      return Response.redirect(new URL("/auth/", request.url));
+    }
   }
 
   // Locale

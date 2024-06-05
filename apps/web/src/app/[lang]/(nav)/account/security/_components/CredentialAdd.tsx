@@ -22,13 +22,10 @@ type Props = {
 export function CredentialAdd({ challenge, id }: Props) {
   const router = useRouter();
   const { ready, session } = useSession();
-  if (!session || !session.user) {
-    return null;
-  }
 
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!ready) return;
+    if (!ready || !session || !session.user) return;
 
     const idAxiosPromise = getIdAxios();
 
@@ -82,13 +79,14 @@ export function CredentialAdd({ challenge, id }: Props) {
       } else {
         console.error(error);
       }
+    } finally {
+      router.refresh();
     }
-    router.refresh();
   };
 
   return (
     <form className="w-full" onSubmit={handleRegister}>
-      <Button className="w-full">
+      <Button className="w-full" disabled={!session || !session.user}>
         <Plus size={24} />
       </Button>
     </form>

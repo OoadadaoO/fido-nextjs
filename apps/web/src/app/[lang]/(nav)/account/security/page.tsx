@@ -100,7 +100,7 @@ export default async function Page() {
               <div className="grid flex-1">
                 <CardTitle className="truncate text-xl">{cred.name}</CardTitle>
                 <CardDescription>
-                  Created: {format(cred.createdAt, "yyyy-MM-dd")}
+                  Created: {format(cred.createdAt, "yyyy-MM-dd HH:mm")}
                 </CardDescription>
               </div>
               <div className="space-x-2">
@@ -134,10 +134,17 @@ export default async function Page() {
                     {session.identifier.os} - {session.identifier.browser}
                   </h2>
                   <CardDescription>
-                    Latest: {format(session.identifier.activeAt, "yyyy-MM-dd")}
+                    Latest:{" "}
+                    {format(session.identifier.activeAt, "yyyy-MM-dd HH:mm")}
                   </CardDescription>
                 </div>
-                <SessionDelete sessionId={session.id} />
+                {session.id === token.sid ? (
+                  <div className="select-none text-muted-foreground">
+                    You are here.
+                  </div>
+                ) : (
+                  <SessionDelete sessionId={session.id} />
+                )}
               </div>
             ))}
           </CardContent>

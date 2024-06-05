@@ -1,9 +1,7 @@
 import { cookies } from "next/headers";
 import Image from "next/image";
-import { redirect } from "next/navigation";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { auth } from "@/lib/auth";
 import { serverCred } from "@/lib/auth/config";
 
 import { Back } from "./_components/Back";
@@ -11,11 +9,6 @@ import { Login } from "./_components/Login";
 import { SignUp } from "./_components/SignUp";
 
 export default async function Page() {
-  const session = await auth();
-  if (session && session.user) {
-    redirect("/");
-  }
-
   const [id, challenge] = cookies()
     .get(serverCred.cookieName)
     ?.value.split(".") || ["", ""];

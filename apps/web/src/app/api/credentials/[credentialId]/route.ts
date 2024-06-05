@@ -1,9 +1,11 @@
+import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
 
 import { lAuth } from "@/lib/auth";
-import { Credential } from "@/lib/db";
+import { sessionToken } from "@/lib/auth/config";
+import { Credential, Session } from "@/lib/db";
 
-export async function POST(
+export async function DELETE(
   req: NextRequest,
   {
     params,
@@ -14,6 +16,7 @@ export async function POST(
   },
 ) {
   try {
+    // invalid token or session does not exist
     const token = await lAuth();
     if (!token || !token.sub) {
       return NextResponse.json(
@@ -21,7 +24,12 @@ export async function POST(
         { status: 401 },
       );
     }
+    if (!(await Session.findById(token.sid).exec())) {
+      cookies().delete(sessionToken.cookieName);
+      return NextResponse.redirect("/auth/");
+    }
 
+    // credential does not belong to user
     const credential = await Credential.findById(params.credentialId).exec();
     if (!credential || credential.ownerId.toString() !== token.sub) {
       return NextResponse.json(

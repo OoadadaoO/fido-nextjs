@@ -29,10 +29,11 @@ export function CredentialDelete(props: Props) {
   const handleDelete = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await axios.post(`/api/credentials/${props.credentialId}`);
-      router.refresh();
+      await axios.delete(`/api/credentials/${props.credentialId}`);
     } catch (error) {
       console.error(error);
+    } finally {
+      router.refresh();
     }
   };
 

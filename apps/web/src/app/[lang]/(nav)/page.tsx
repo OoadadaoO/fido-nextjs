@@ -47,7 +47,7 @@ export default function Home() {
           </p>
         </div>
         <a
-          href="#"
+          href="/auth/?redirect=/account/security/"
           className="inline-block rounded-full bg-primary px-6 py-2 font-semibold text-primary-foreground transition duration-300 hover:bg-primary/80"
         >
           Start Demo
