@@ -99,7 +99,7 @@ export default async function Page() {
               )}
               <div className="grid flex-1">
                 <CardTitle className="truncate text-xl">{cred.name}</CardTitle>
-                <CardDescription>
+                <CardDescription className="truncate">
                   <span className="hidden sm:inline">Created: </span>
                   {format(cred.createdAt, "yyyy-MM-dd HH:mm")}
                 </CardDescription>
@@ -131,10 +131,10 @@ export default async function Page() {
                   />
                 </div>
                 <div className="grid flex-1">
-                  <h2 className="mt-1 font-semibold">
+                  <h2 className="mt-1 truncate font-semibold">
                     {session.identifier.browser} on {session.identifier.os}
                   </h2>
-                  <CardDescription>
+                  <CardDescription className="truncate">
                     <span className="hidden sm:inline">Latest: </span>
 
                     {format(session.identifier.activeAt, "yyyy-MM-dd HH:mm")}
