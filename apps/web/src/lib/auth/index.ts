@@ -114,7 +114,7 @@ export async function getSession({
   token: Token;
   identifier?: Identifier;
 }): Promise<Session | string> {
-  const { sid, iat } = token;
+  const { sid } = token;
 
   const existedSession = await SessionModel.findById(sid).exec();
   if (!existedSession) return "Session out of date";
@@ -126,11 +126,11 @@ export async function getSession({
       identifier: {
         ...existedSession.identifier,
         ...identifier,
-        activeAt: new Date(iat * 1000),
+        activeAt: new Date(),
       },
       expireAt: laterDate(
         existedSession.expireAt,
-        new Date(iat * 1000 + extDiff),
+        new Date(Date.now() * 1000 + extDiff),
       ),
     },
     { new: true },

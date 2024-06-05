@@ -15,7 +15,6 @@ export async function POST(
 ) {
   try {
     const token = await lAuth();
-    console.log(token);
     if (!token || !token.sub) {
       return NextResponse.json(
         { error: { code: 0, message: "Unauthorized" } },
@@ -24,7 +23,6 @@ export async function POST(
     }
 
     const session = await Session.findById(params.sessionId).exec();
-    console.log(session);
     if (!session || session.userId.toString() !== token.sub) {
       return NextResponse.json(
         { error: { code: 0, message: "Unauthorized" } },

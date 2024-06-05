@@ -53,6 +53,7 @@ export async function middleware(request: NextRequest) {
   res.cookies.set({
     name: serverCred.cookieName,
     value: generateCred(),
+    ...serverCred.cookieOptions,
   });
 
   applySetCookie(request, res);

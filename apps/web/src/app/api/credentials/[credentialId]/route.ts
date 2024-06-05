@@ -15,7 +15,6 @@ export async function POST(
 ) {
   try {
     const token = await lAuth();
-    console.log(token);
     if (!token || !token.sub) {
       return NextResponse.json(
         { error: { code: 0, message: "Unauthorized" } },
@@ -24,7 +23,6 @@ export async function POST(
     }
 
     const credential = await Credential.findById(params.credentialId).exec();
-    console.log(credential);
     if (!credential || credential.ownerId.toString() !== token.sub) {
       return NextResponse.json(
         { error: { code: 0, message: "Unauthorized" } },

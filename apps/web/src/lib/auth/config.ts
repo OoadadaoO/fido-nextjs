@@ -3,14 +3,19 @@ import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { base64url } from "jose";
 
 import { privateEnv } from "../env/private";
+import { publicEnv } from "../env/public";
 
 export const serverCred: {
   cookieName: string;
   cookieOptions: Partial<ResponseCookie>;
 } = {
   cookieName:
-    privateEnv.NODE_ENV === "production" ? "____Secure.cred" : "__Dev.cred",
-  cookieOptions: {},
+    privateEnv.NODE_ENV === "production" ? "FIDOG_CRED" : "__Dev.FIDOG_CRED",
+  cookieOptions: {
+    httpOnly: true,
+    secure: publicEnv.NEXT_PUBLIC_BASE_URL.startsWith("https"),
+    sameSite: "lax",
+  },
 };
 
 export const sessionToken: {
@@ -26,10 +31,10 @@ export const sessionToken: {
   expDiff: parseTimeToMilliSeconds(privateEnv.AUTH_EXPIRES),
   extDiff: parseTimeToMilliSeconds(privateEnv.AUTH_ACTIVE_EXTEND),
   cookieName:
-    privateEnv.NODE_ENV === "production" ? "____Secure.sst" : "__Dev.sst",
+    privateEnv.NODE_ENV === "production" ? "FIDOG_SST" : "__Dev.FIDOG_SST",
   cookieOptions: {
     httpOnly: true,
-    secure: privateEnv.NODE_ENV === "production",
+    secure: publicEnv.NEXT_PUBLIC_BASE_URL.startsWith("https"),
     sameSite: "lax",
   },
 };

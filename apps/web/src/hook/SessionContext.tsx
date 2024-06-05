@@ -34,7 +34,6 @@ export function SessionProvider({ children }: Props) {
         data: { data },
       } = await axios.get<GetSessionResponse>("/api/auth/session");
       const s = data ? parseSession(data) : null;
-      console.log("Session", s);
       setSession(s);
       setReady(true);
     };

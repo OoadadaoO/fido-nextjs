@@ -17,7 +17,6 @@ export async function POST(req: NextRequest) {
   const token = await lAuth();
   const username = req.nextUrl.searchParams.get("username");
   const redundant = req.nextUrl.searchParams.get("redundant") === "true";
-  console.log("redundant", redundant);
   if (!username && !token) {
     return NextResponse.json({ error: "Invalid query" }, { status: 400 });
   }
