@@ -77,6 +77,7 @@ async function authUserAtom(
         credential.counter,
       );
     } catch (error: any) {
+      console.error(error);
       throw new Error(`*401Invalid assertion`);
     }
 

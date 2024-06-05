@@ -78,6 +78,7 @@ async function registerUserAtom(
         publicEnv.NEXT_PUBLIC_RP_ID,
       );
     } catch (error: any) {
+      console.error(error.message);
       throw new Error(`*401Invalid attestation`);
     }
 
@@ -112,7 +113,7 @@ async function registerUserAtom(
 
     return {};
   } catch (error: any) {
-    console.error(error);
+    console.error(error.message);
     await dbSession.abortTransaction();
     if (error.message.startsWith("*")) {
       return {

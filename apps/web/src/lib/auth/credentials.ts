@@ -136,9 +136,10 @@ export class Attestation {
     rpId: string,
   ): Promise<AttestationValidationData> {
     const clientData = this.parseClientDataJSON();
-
     if (clientData.challenge !== challenge)
-      throw new Error("Invalid challenge!");
+      throw new Error(
+        "Invalid challenge! " + clientData.challenge + " " + challenge,
+      );
     if (clientData.origin !== origin) throw new Error("Invalid origin!");
     if (clientData.type !== "webauthn.create")
       throw new Error("Invalid WebAuthn type!");

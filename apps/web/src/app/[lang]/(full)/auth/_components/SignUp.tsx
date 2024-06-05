@@ -2,7 +2,6 @@
 
 import { type FormEvent, useState } from "react";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import axios from "axios";
@@ -27,7 +26,7 @@ export function SignUp({ id, challenge }: Props) {
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const idAxiosPromise = getIdAxios();
+    const idAxios = await getIdAxios();
 
     // create public key
     const publicKey: PublicKeyCredentialCreationOptions = {
@@ -63,7 +62,6 @@ export function SignUp({ id, challenge }: Props) {
 
       const attestationJSON = Attestation.toJSON(credential); // sennd to server
 
-      const idAxios = await idAxiosPromise;
       const res = await idAxios.post(
         `/api/auth/register?${new URLSearchParams({ username })}`,
         attestationJSON,
@@ -102,19 +100,13 @@ export function SignUp({ id, challenge }: Props) {
       </form>
       <p className="px-8 text-center text-sm text-muted-foreground">
         By clicking continue, you agree to our{" "}
-        <Link
-          href="#"
-          className="underline underline-offset-4 hover:text-primary"
-        >
+        <a href="#" className="underline underline-offset-4 hover:text-primary">
           Terms of Service
-        </Link>{" "}
+        </a>{" "}
         and{" "}
-        <Link
-          href="#"
-          className="underline underline-offset-4 hover:text-primary"
-        >
+        <a href="#" className="underline underline-offset-4 hover:text-primary">
           Privacy Policy
-        </Link>
+        </a>
         .
       </p>
     </div>

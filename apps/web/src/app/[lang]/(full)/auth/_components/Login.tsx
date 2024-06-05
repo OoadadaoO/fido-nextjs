@@ -22,7 +22,7 @@ export function Login({ challenge }: Props) {
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const idAxiosPromise = getIdAxios();
+    const idAxios = await getIdAxios();
 
     // get public key
     const publicKey: PublicKeyCredentialRequestOptions = {
@@ -41,7 +41,6 @@ export function Login({ challenge }: Props) {
 
       const assertionJSON = Assertion.toJSON(credential); // sennd to server
 
-      const idAxios = await idAxiosPromise;
       const res = await idAxios.post(`/api/auth/login`, assertionJSON);
       console.log(res.data);
     } catch (error) {

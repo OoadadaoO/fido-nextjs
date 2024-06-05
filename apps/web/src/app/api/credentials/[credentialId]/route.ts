@@ -52,6 +52,7 @@ export async function DELETE(
     }
 
     await Credential.findByIdAndDelete(params.credentialId).exec();
+    await Session.deleteMany({ credentialId: params.credentialId }).exec();
 
     return NextResponse.json({ data: { success: true } }, { status: 200 });
   } catch (error) {

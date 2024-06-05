@@ -20,7 +20,11 @@ export function getPreferLocale(request: NextRequest) {
     "accept-language": request.headers.get("accept-language") || undefined,
   };
   const languages = new Negotiator({ headers }).languages();
-  return match(languages, locale.accepts, locale.default);
+  try {
+    return match(languages, locale.accepts, locale.default);
+  } catch (e) {
+    return locale.default;
+  }
 }
 
 /**
